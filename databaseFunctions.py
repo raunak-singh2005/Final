@@ -1,7 +1,7 @@
+from globalFunctions import *
 import sqlite3
 import re
 from datetime import datetime
-import hashlib
 
 
 def initDB():
@@ -79,16 +79,6 @@ def validateAndTransformAge(DOB):
         return int(birth_date.day), int(birth_date.month), int(birth_date.year)
     else:
         return None
-
-
-def hashPassword(password):
-    """
-    Hashes the password using SHA256
-    :param password:
-    :return: Hashed Password
-    """
-
-    return hashlib.sha256(password.encode()).hexdigest()
 
 
 def userLogin(email, passwordHash):
