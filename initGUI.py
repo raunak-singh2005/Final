@@ -9,9 +9,9 @@ def initGUI():
     """
 
     initWindow = tk.Tk()
-    initWindow.title("Login")
-    initWindow.geometry("300x200")
-    initWindow.configure(background="white")
+    initWindow.title('Login')
+    initWindow.geometry('300x200')
+    initWindow.configure(background='white')
 
     def onLogin():
         initWindow.destroy()
@@ -21,10 +21,10 @@ def initGUI():
         initWindow.destroy()
         signupGUI()
 
-    loginButton = tk.Button(initWindow, text="Login", command=onLogin)
+    loginButton = tk.Button(initWindow, text='Login', command=onLogin)
     loginButton.pack()
 
-    signupButton = tk.Button(initWindow, text="Signup", command=onSignup)
+    signupButton = tk.Button(initWindow, text='Signup', command=onSignup)
     signupButton.pack()
 
     initWindow.mainloop()

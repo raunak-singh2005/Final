@@ -59,9 +59,9 @@ def validatePassword(password):
     """
 
     if re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', password):
-        return False
-    else:
         return True
+    else:
+        return False
 
 
 def validateAndTransformAge(DOB):
@@ -155,17 +155,18 @@ def userSignup(userName, password, DOB, email, phoneNumber):
     print("User Created")
 
 
-def getUserName(user_ID):
+def getUserName(User_ID):
     """
     Gets the username of the user
-    :param user_ID:
+    :param User_ID:
     :return: Username
     """
 
     conn, cursor = initDB()
 
-    cursor.execute('SELECT User_Name FROM "main"."UserInformation" WHERE User_ID = ?', user_ID)
-    userName = cursor.fetchall()
+    cursor.execute('SELECT User_Name FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
+    userName = cursor.fetchone()
+    userName = userName[0]
 
     closeDB(conn, cursor)
 
@@ -181,8 +182,12 @@ def getDOB(user_ID):
 
     conn, cursor = initDB()
 
-    cursor.execute('SELECT DOB_Day, DOB_Month, DOB_Year FROM "main"."UserInformation" WHERE User_ID = ?', user_ID)
-    day,month,year = cursor.fetchall()
+    cursor.execute('SELECT DOB_Day, DOB_Month, DOB_Year FROM "main"."UserInformation" WHERE User_ID = ?', (user_ID,))
+    day,month,year = cursor.fetchone()
+
+    day = day[0]
+    month = month[0]
+    year = year[0]
 
     closeDB(conn, cursor)
 
@@ -198,9 +203,10 @@ def getEmail(User_ID):
 
     conn, cursor = initDB()
 
-    cursor.execute('SELECT Email_Address FROM "main"."UserInformation" WHERE User_ID = ?', User_ID)
-    email = cursor.fetchall()
+    cursor.execute('SELECT Email_Address FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
+    email = cursor.fetchone()
 
+    email = email[0]
     closeDB(conn, cursor)
 
     return email
@@ -215,9 +221,9 @@ def getPhoneNumber(User_ID):
 
     conn, cursor = initDB()
 
-    cursor.execute('SELECT Phone_Number FROM "main"."UserInformation" WHERE User_ID = ?', User_ID)
-    phoneNumber = cursor.fetchall()
-
+    cursor.execute('SELECT Phone_Number FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
+    phoneNumber = cursor.fetchone()
+    phoneNumber = phoneNumber[0]
     closeDB(conn, cursor)
 
     return phoneNumber
@@ -236,3 +242,27 @@ def getProducts():
     closeDB(conn, cursor)
 
     return products
+
+
+def getProductStock(productID):
+    """
+    Gets the stock of a product from the database
+    :param productID:
+    :return: stock
+    """
+    conn, cursor = initDB()
+    cursor.execute('SELECT Product_Quantity FROM "main"."ProductInformation" WHERE ProductID = ?', (productID,))
+    stock = cursor.fetchone()
+    closeDB(conn, cursor)
+    return stock[0]
+
+
+def updateProductStock(productID, quantity):
+    """
+    Updates the stock of a product in the database
+    :param productID:
+    :param quantity:
+    """
+    conn, cursor = initDB()
+    cursor.execute('UPDATE "main"."ProductInformation" SET Product_Quantity = Product_Quantity - ? WHERE ProductID = ?', (quantity, productID))
+    commitAndCloseDB(conn, cursor)

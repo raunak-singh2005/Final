@@ -36,7 +36,7 @@ def spawnError(message):
     :return:
     """
 
-    messagebox.showerror("Error", message)
+    messagebox.showerror('Error', message)
 
 
 def spawnNotification(message):
@@ -46,4 +46,13 @@ def spawnNotification(message):
     :return:
     """
 
-    messagebox.showinfo("Notification", message)
+    messagebox.showinfo('Notification', message)
+
+def spawnWarning(message):
+    """
+    Spawn a warning message box
+    :param message:
+    :return:
+    """
+
+    messagebox.showwarning('Warning', message)

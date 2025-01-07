@@ -3,9 +3,13 @@ from databaseFunctions import userSignup
 
 
 def signupGUI():
+    """
+    This function creates the signup window for the user to signup
+    """
+
     signupWindow = tk.Tk()
-    signupWindow.title("Signup")
-    signupWindow.geometry("300x320")
+    signupWindow.title('Signup')
+    signupWindow.geometry('300x320')
     signupWindow.resizable(False, False)
 
     labels = {
@@ -23,13 +27,11 @@ def signupGUI():
         signupWindow.destroy()
         if labels['Password'].get() == labels['Confirm Password'].get():
             userSignup(labels['Username'].get(), labels['Password'].get(), labels['Date of Birth'].get(), labels['Email'].get(), labels['Phone Number'].get())
-            spawnNotification("Signup Successful")
+            spawnNotification('Signup Successful')
         else:
-            spawnError("Passwords do not match")
+            spawnError('Passwords do not match')
 
-    signupButton = tk.Button(signupWindow, text="Signup", command=onSignup)
+    signupButton = tk.Button(signupWindow, text='Signup', command=onSignup)
     signupButton.pack()
 
     signupWindow.mainloop()
-
-signupGUI()
