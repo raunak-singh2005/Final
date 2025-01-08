@@ -8,8 +8,10 @@ def loginGUI():
     """
     loginWindow = tk.Tk()
     loginWindow.title('Login')
-    loginWindow.geometry('300x200')
+    loginWindow.geometry('400x300')
     loginWindow.configure(background='white')
+
+    tk.Label(loginWindow, text='Login', font=('Arial', 20, 'bold'), bg='white').pack(pady=20)
 
     labels = {
         'Email': tk.StringVar(),
@@ -24,12 +26,13 @@ def loginGUI():
         if user_ID:
             loginWindow.destroy()
             spawnNotification('Login Successful')
+            return user_ID
         else:
             spawnError('Login Failed')
+            return False
 
-    loginButton = tk.Button(loginWindow, text='Login', command=onLogin)
-    loginButton.pack()
+    loginButton = tk.Button(loginWindow, text='Login', command=onLogin, font=('Arial', 14, 'bold'), bg='blue', fg='white', bd=2, relief='solid')
+    loginButton.pack(pady=20)
 
     loginWindow.mainloop()
 
-loginGUI()

@@ -7,11 +7,12 @@ def initGUI():
     """
     This function creates the initial window for the user to either login or signup
     """
-
     initWindow = tk.Tk()
-    initWindow.title('Login')
-    initWindow.geometry('300x200')
+    initWindow.title('Welcome')
+    initWindow.geometry('400x300')
     initWindow.configure(background='white')
+
+    tk.Label(initWindow, text='Welcome', font=('Arial', 20, 'bold'), bg='white').pack(pady=20)
 
     def onLogin():
         initWindow.destroy()
@@ -21,10 +22,14 @@ def initGUI():
         initWindow.destroy()
         signupGUI()
 
-    loginButton = tk.Button(initWindow, text='Login', command=onLogin)
-    loginButton.pack()
+    buttonFrame = tk.Frame(initWindow, bg='white')
+    buttonFrame.pack(pady=20)
 
-    signupButton = tk.Button(initWindow, text='Signup', command=onSignup)
-    signupButton.pack()
+    loginButton = tk.Button(buttonFrame, text='Login', command=onLogin, font=('Arial', 14, 'bold'), bg='blue', fg='white', bd=2, relief='solid')
+    loginButton.pack(side='left', padx=10)
+
+    signupButton = tk.Button(buttonFrame, text='Signup', command=onSignup, font=('Arial', 14, 'bold'), bg='green', fg='white', bd=2, relief='solid')
+    signupButton.pack(side='right', padx=10)
 
     initWindow.mainloop()
+
