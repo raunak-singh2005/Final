@@ -8,11 +8,13 @@ def createLabels(window, labels):
 
     # Create labels and entry fields for each label
     for label in labels:
-        tk.Label(window, text=label).pack()
+        frame = tk.Frame(window)
+        frame.pack(fill='x', padx=5, pady=5)
+        tk.Label(frame, text=label, anchor='w').pack(side='left', padx=5)
         if label == 'Password' or label == 'Confirm Password':
-            tk.Entry(window, textvariable=labels[label], show="*").pack()
+            tk.Entry(frame, textvariable=labels[label], show="*").pack(side='right', fill='x', expand=True)
         else:
-            tk.Entry(window, textvariable=labels[label]).pack()
+            tk.Entry(frame, textvariable=labels[label]).pack(side='right', fill='x', expand=True)
 
 
 def hashPassword(password):
