@@ -143,7 +143,7 @@ def getUserName(User_ID):
 
     conn, cursor = initDB()
 
-    # sql command to fetch user name
+    # sql command to fetch username
     cursor.execute('SELECT User_Name FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
     userName = cursor.fetchone()
     userName = userName[0]

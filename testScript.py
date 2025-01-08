@@ -9,8 +9,8 @@ def addSampleProducts():
 
     for i in range(50):
         print(i)
-        productprefix = i+1
-        productName = f'Product {productprefix}'
+        productPrefix = i+1
+        productName = f'Product {productPrefix}'
         productPrice = round(random.uniform(10, 100), 2)
         productStock = random.randint(1, 50)
         productDescription = f'Description for Product {i}'

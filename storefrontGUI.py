@@ -109,7 +109,7 @@ def createStoreFront(cart, User_ID):
     navFrame = tk.Frame(storefront, bg='black', height=50, padx=10)
     navFrame.pack(fill='x')
 
-    # Display the store front and the user name
+    # Display the storefront and the username
     tk.Label(navFrame, text='Store Front', fg='white', bg='black', font=('Arial', 14, 'bold')).pack(side='left')
     tk.Label(navFrame, text='Welcome ' + userName, fg='white', bg='black', font=('Arial', 12)).pack(side='right')
 

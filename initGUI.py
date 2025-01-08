@@ -16,7 +16,7 @@ def initGUI():
     # function to handle login
     def onLogin():
         initWindow.destroy()
-        userID = loginGUI()
+        loginGUI()
 
     # function to handle signup
     def onSignup():
