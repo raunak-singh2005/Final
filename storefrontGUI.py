@@ -3,6 +3,7 @@ from databaseFunctions import getProducts
 from databaseFunctions import getUserName
 from databaseFunctions import getProductStock
 from databaseFunctions import updateProductStock
+from databaseFunctions import placeOrder
 from PIL import Image, ImageTk
 import os
 import sys
@@ -135,7 +136,7 @@ def createStoreFront(cart, User_ID):
     products = getProducts()
     displayProducts(products)
 
-    tk.Button(storefront, text='Checkout', command=lambda c=cart: checkout(c)).pack()
+    tk.Button(storefront, text='Checkout', command=lambda c=cart, i=User_ID: checkout(i,c)).pack()
 
     storefront.mainloop()
 
@@ -158,7 +159,7 @@ def addToCart(cart, item):
         spawnWarning("Not enough stock available")
 
 
-def checkout(cart):
+def checkout(userID, cart):
     """
     This function displays the cart and allows the user to check out
     :param cart:
@@ -168,10 +169,10 @@ def checkout(cart):
         spawnWarning("Cart is empty")
         return
 
-    showCart(cart)
+    showCart(userID, cart)
 
 
-def showCart(cart):
+def showCart(userID, cart):
     """
     This function displays the cart
     :param cart:
@@ -193,7 +194,7 @@ def showCart(cart):
 
     def updateCart():
         cartWindow.destroy()
-        showCart(cart)
+        showCart(userID, cart)
 
     def incrementQuantity(productID):
         currentStock = getProductStock(productID)
@@ -231,6 +232,7 @@ def showCart(cart):
         total = sum([details['price'] * details['quantity'] for details in cartSummary.values()])
         total = round(total, 2)
         spawnNotification(f'Total amount: £{total}')
+        placeOrder(userID, cart, total)
         cart.clear()
         cartWindow.destroy()
         sys.exit()
@@ -259,3 +261,5 @@ def showCart(cart):
     tk.Button(cartWindow, text='Checkout', command=finalCheckout, font=('Arial', 12, 'bold')).pack(pady=10)
 
     cartWindow.mainloop()
+
+createStoreFront([], 1)

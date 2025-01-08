@@ -289,11 +289,10 @@ def placeOrder(userID, cart, total):
 
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    cursor.execute('INSERT INTO "main"."Sales"(Order_ID, User_ID, Date,Total_Price) VALUES (NULL, ?, ?, ?)', (userID, str(date), total))
-    orderID = cursor.lastrowid
+    # Convert cart list to a string
+    # Convert cart list to a string of product IDs only
+    cart_str = ','.join(str(item[0]) for item in cart)
 
-    for product in cart:
-        cursor.execute('INSERT INTO "main"."OrderProductInformation"(Order_ID, Product_ID, Quantity) VALUES (?, ?, ?)', (orderID, product['ProductID'], product['Quantity']))
-        updateProductStock(product['ProductID'], product['Quantity'])
+    cursor.execute('INSERT INTO "main"."Sales"(User_ID, Date, Items, Total_Price) VALUES (?, ?, ?, ?)', (userID, str(date), cart_str, total))
 
     commitAndCloseDB(conn, cursor)
