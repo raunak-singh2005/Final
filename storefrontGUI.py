@@ -1,5 +1,5 @@
 from globalFunctions import *
-from databaseFunctions import getProducts, closeDB
+from databaseFunctions import getProducts
 from databaseFunctions import getUserName
 from databaseFunctions import getProductStock
 from databaseFunctions import updateProductStock
