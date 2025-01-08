@@ -88,14 +88,11 @@ def createStoreFront(cart, User_ID):
     def searchProducts(query='', category=None):
         query = query.lower()
 
-        if not checkSQLInjection(query):
-            spawnError('invalid input')
-            sys.exit()
-
         if category:
             filteredProducts = [product for product in getProducts() if category.lower() in product[5].lower()]
         else:
-            filteredProducts = [product for product in getProducts() if query in product[1].lower() or query in product[5].lower()]
+            filteredProducts = [product for product in getProducts() if
+                                query in product[1].lower() or query in product[5].lower()]
         displayProducts(filteredProducts)
 
     def displayProducts(products):

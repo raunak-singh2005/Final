@@ -276,3 +276,24 @@ def updateProductStock(productID, quantity):
     conn, cursor = initDB()
     cursor.execute('UPDATE "main"."ProductInformation" SET Product_Quantity = Product_Quantity - ? WHERE ProductID = ?', (quantity, productID))
     commitAndCloseDB(conn, cursor)
+
+
+def placeOrder(userID, cart, total):
+    """
+    Places an order in the database
+    :param userID:
+    :param cart:
+    :param total:
+    """
+    conn, cursor = initDB()
+
+    date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    cursor.execute('INSERT INTO "main"."Sales"(Order_ID, User_ID, Date,Total_Price) VALUES (NULL, ?, ?, ?)', (userID, str(date), total))
+    orderID = cursor.lastrowid
+
+    for product in cart:
+        cursor.execute('INSERT INTO "main"."OrderProductInformation"(Order_ID, Product_ID, Quantity) VALUES (?, ?, ?)', (orderID, product['ProductID'], product['Quantity']))
+        updateProductStock(product['ProductID'], product['Quantity'])
+
+    commitAndCloseDB(conn, cursor)
