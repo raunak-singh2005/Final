@@ -6,6 +6,7 @@ import sys
 
 def initDB():
 
+    # initialise Database Connection
     conn = sqlite3.connect('storeData.db')
     cursor = conn.cursor()
     return conn, cursor
@@ -13,6 +14,7 @@ def initDB():
 
 def commitAndCloseDB(conn, cursor):
 
+    # commit and close Database Connection
     conn.commit()
     cursor.close()
     conn.close()
@@ -20,12 +22,14 @@ def commitAndCloseDB(conn, cursor):
 
 def closeDB(conn, cursor):
 
+    # close Database Connection
     cursor.close()
     conn.close()
 
 
 def validateEmail(email):
 
+    # validate email with regex
     if re.match(r'[^@]+@[^@]+\.[^@]+', email):
         return True
     else:
@@ -34,6 +38,7 @@ def validateEmail(email):
 
 def validatePassword(password):
 
+    # validate password with regex
     if re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', password):
         return False
     else:
@@ -42,9 +47,11 @@ def validatePassword(password):
 
 def validateAndTransformAge(DOB):
 
+    # validate date of birth and transform to day, month, year
     try:
         birth_date = datetime.strptime(DOB, '%d/%m/%Y')
     except ValueError:
+        # handle incorrect format
         spawnError('Date of birth must be in the format dd/mm/yyyy')
         sys.exit()
 
@@ -59,9 +66,12 @@ def validateAndTransformAge(DOB):
 
 def userLogin(email, passwordHash):
 
+    # handle user login
     conn, cursor = initDB()
 
     searchUserDataTuple = (email, passwordHash)
+
+    # sql command to fetch user id
     cursor.execute('SELECT User_ID FROM "main"."UserInformation" WHERE Email_Address = ? AND Password_Hash =?',
                    searchUserDataTuple)
 
@@ -79,6 +89,7 @@ def userLogin(email, passwordHash):
 def userSignup(userName, password, DOB, email, phoneNumber):
 
     try:
+        # Input validation
         ageData = validateAndTransformAge(DOB)
         if ageData is None:
             spawnError('User must be over 18 years old')
@@ -101,6 +112,8 @@ def userSignup(userName, password, DOB, email, phoneNumber):
         conn, cursor = initDB()
 
         searchUserDataTuple = (email,passwordHash)
+
+        # sql command to check if user already exists
         cursor.execute('SELECT User_ID FROM "main"."UserInformation" WHERE Email_Address = ? AND Password_Hash =?',
                        searchUserDataTuple)
         user_id = cursor.fetchone()
@@ -111,6 +124,8 @@ def userSignup(userName, password, DOB, email, phoneNumber):
             return False
 
         insertDataTuple = (userName, passwordHash, ageData[0], ageData[1], ageData[2], email, phoneNumber)
+
+        # sql command to insert user data
         cursor.execute('INSERT INTO "main"."UserInformation"(User_ID, User_Name, Password_Hash, DOB_Day, DOB_Month, '
                        'DOB_Year, Email_Address, Phone_Number) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)', insertDataTuple)
 
@@ -119,6 +134,7 @@ def userSignup(userName, password, DOB, email, phoneNumber):
         print("User Created")
         spawnNotification('Signup Successful')
     except ValueError as e:
+        # handle errors
         spawnError(f'Error: {str(e)}')
         sys.exit()
 
@@ -127,6 +143,7 @@ def getUserName(User_ID):
 
     conn, cursor = initDB()
 
+    # sql command to fetch user name
     cursor.execute('SELECT User_Name FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
     userName = cursor.fetchone()
     userName = userName[0]
@@ -140,6 +157,7 @@ def getDOB(user_ID):
 
     conn, cursor = initDB()
 
+    # sql command to fetch date of birth
     cursor.execute('SELECT DOB_Day, DOB_Month, DOB_Year FROM "main"."UserInformation" WHERE User_ID = ?', (user_ID,))
     day,month,year = cursor.fetchone()
 
@@ -156,6 +174,7 @@ def getEmail(User_ID):
 
     conn, cursor = initDB()
 
+    # sql command to fetch email
     cursor.execute('SELECT Email_Address FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
     email = cursor.fetchone()
 
@@ -169,6 +188,7 @@ def getPhoneNumber(User_ID):
 
     conn, cursor = initDB()
 
+    # sql command to fetch phone number
     cursor.execute('SELECT Phone_Number FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
     phoneNumber = cursor.fetchone()
     phoneNumber = phoneNumber[0]
@@ -180,6 +200,8 @@ def getPhoneNumber(User_ID):
 def getProducts():
 
     conn, cursor = initDB()
+
+    # sql command to fetch products
     cursor.execute('SELECT * FROM "main"."ProductInformation"')
     products = cursor.fetchall()
 
@@ -191,6 +213,8 @@ def getProducts():
 def getProductStock(productID):
 
     conn, cursor = initDB()
+
+    # sql command to fetch product stock
     cursor.execute('SELECT Product_Quantity FROM "main"."ProductInformation" WHERE ProductID = ?', (productID,))
     stock = cursor.fetchone()
     closeDB(conn, cursor)
@@ -200,12 +224,15 @@ def getProductStock(productID):
 def updateProductStock(productID, quantity):
 
     conn, cursor = initDB()
+
+    # sql command to update product stock
     cursor.execute('UPDATE "main"."ProductInformation" SET Product_Quantity = Product_Quantity - ? WHERE ProductID = ?', (quantity, productID))
     commitAndCloseDB(conn, cursor)
 
 
 def placeOrder(userID, cart, total):
 
+    # handle order placement
     conn, cursor = initDB()
 
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -214,6 +241,7 @@ def placeOrder(userID, cart, total):
     # Convert cart list to a string of product IDs only
     cart_str = ','.join(str(item[0]) for item in cart)
 
+    # sql command to insert order data
     cursor.execute('INSERT INTO "main"."Sales"(User_ID, Date, Items, Total_Price) VALUES (?, ?, ?, ?)', (userID, str(date), cart_str, total))
 
     commitAndCloseDB(conn, cursor)

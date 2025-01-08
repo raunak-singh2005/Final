@@ -5,6 +5,7 @@ from signupGUI import signupGUI
 
 def initGUI():
 
+    # initialise the GUI
     initWindow = tk.Tk()
     initWindow.title('Welcome')
     initWindow.geometry('400x300')
@@ -12,14 +13,17 @@ def initGUI():
 
     tk.Label(initWindow, text='Welcome', font=('Arial', 20, 'bold'), bg='white').pack(pady=20)
 
+    # function to handle login
     def onLogin():
         initWindow.destroy()
         userID = loginGUI()
 
+    # function to handle signup
     def onSignup():
         initWindow.destroy()
         signupGUI()
 
+    # create buttons for login and signup
     buttonFrame = tk.Frame(initWindow, bg='white')
     buttonFrame.pack(pady=20)
 
