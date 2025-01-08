@@ -17,7 +17,7 @@ def signupGUI():
         'Username': tk.StringVar(),
         'Password': tk.StringVar(),
         'Confirm Password': tk.StringVar(),
-        'Date of Birth': tk.StringVar(),
+        'Date of Birth [dd/mm/yyyy]': tk.StringVar(),
         'Email': tk.StringVar(),
         'Phone Number': tk.StringVar()
     }
@@ -26,8 +26,7 @@ def signupGUI():
 
     def onSignup():
         if labels['Password'].get() == labels['Confirm Password'].get():
-            userSignup(labels['Username'].get(), labels['Password'].get(), labels['Date of Birth'].get(), labels['Email'].get(), labels['Phone Number'].get())
-            spawnNotification('Signup Successful')
+            userSignup(labels['Username'].get(), labels['Password'].get(), labels['Date of Birth [dd/mm/yyyy]'].get(), labels['Email'].get(), labels['Phone Number'].get())
             signupWindow.destroy()
         else:
             spawnError('Passwords do not match')

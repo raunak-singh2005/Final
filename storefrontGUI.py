@@ -1,5 +1,5 @@
 from globalFunctions import *
-from databaseFunctions import getProducts
+from databaseFunctions import getProducts, closeDB
 from databaseFunctions import getUserName
 from databaseFunctions import getProductStock
 from databaseFunctions import updateProductStock
@@ -87,6 +87,11 @@ def createStoreFront(cart, User_ID):
 
     def searchProducts(query='', category=None):
         query = query.lower()
+
+        if not checkSQLInjection(query):
+            spawnError('invalid input')
+            sys.exit()
+
         if category:
             filteredProducts = [product for product in getProducts() if category.lower() in product[5].lower()]
         else:
@@ -158,7 +163,7 @@ def addToCart(cart, item):
 
 def checkout(cart):
     """
-    This function displays the cart and allows the user to checkout
+    This function displays the cart and allows the user to check out
     :param cart:
     :return:
     """

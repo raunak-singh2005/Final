@@ -1,7 +1,7 @@
 from globalFunctions import *
 import sqlite3
-import re
 from datetime import datetime
+import sys
 
 
 def initDB():
@@ -59,9 +59,9 @@ def validatePassword(password):
     """
 
     if re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', password):
-        return True
-    else:
         return False
+    else:
+        return True
 
 
 def validateAndTransformAge(DOB):
@@ -70,8 +70,12 @@ def validateAndTransformAge(DOB):
     :param DOB: Date of birth in the format dd/mm/yyyy
     :return: Tuple (day, month, year) if valid, otherwise None
     """
+    try:
+        birth_date = datetime.strptime(DOB, '%d/%m/%Y')
+    except ValueError:
+        spawnError('Date of birth must be in the format dd/mm/yyyy')
+        sys.exit()
 
-    birth_date = datetime.strptime(DOB, '%d/%m/%Y')
     today = datetime.today()
     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
@@ -116,43 +120,49 @@ def userSignup(userName, password, DOB, email, phoneNumber):
     :param phoneNumber:
     :return: Boolean if validation failure
     """
+    try:
+        ageData = validateAndTransformAge(DOB)
+        if ageData is None:
+            spawnError('User must be over 18 years old')
+            return False
 
-    ageData = validateAndTransformAge(DOB)
-    if ageData is None:
-        print('User is under 18')
-        return False
+        elif not validateEmail(email):
+            spawnError('Email is invalid')
+            return False
 
-    elif not validateEmail(email):
-        print('Email is invalid')
-        return False
+        elif not validatePassword(password):
+            spawnError('Password must be at least 8 characters long and contain at least one letter and one number')
+            return False
 
-    elif not validatePassword(password):
-        print('Password is invalid')
-        return False
+        if checkSQLInjection(userName) or checkSQLInjection(password) or checkSQLInjection(DOB) or checkSQLInjection(email) or checkSQLInjection(phoneNumber):
+            spawnError('invalid input')
+            return False
 
-    print('User data is valid')
+        passwordHash = hashPassword(password)
 
-    passwordHash = hashPassword(password)
+        conn, cursor = initDB()
 
-    conn, cursor = initDB()
+        searchUserDataTuple = (email,passwordHash)
+        cursor.execute('SELECT User_ID FROM "main"."UserInformation" WHERE Email_Address = ? AND Password_Hash =?',
+                       searchUserDataTuple)
+        user_id = cursor.fetchone()
 
-    searchUserDataTuple = (email,passwordHash)
-    cursor.execute('SELECT User_ID FROM "main"."UserInformation" WHERE Email_Address = ? AND Password_Hash =?',
-                   searchUserDataTuple)
-    user_id = cursor.fetchone()
+        if user_id is not None:
+            print('User already exists')
+            closeDB(conn, cursor)
+            return False
 
-    if user_id is not None:
-        print('User already exists')
-        closeDB(conn, cursor)
-        return False
+        insertDataTuple = (userName, passwordHash, ageData[0], ageData[1], ageData[2], email, phoneNumber)
+        cursor.execute('INSERT INTO "main"."UserInformation"(User_ID, User_Name, Password_Hash, DOB_Day, DOB_Month, '
+                       'DOB_Year, Email_Address, Phone_Number) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)', insertDataTuple)
 
-    insertDataTuple = (userName, passwordHash, ageData[0], ageData[1], ageData[2], email, phoneNumber)
-    cursor.execute('INSERT INTO "main"."UserInformation"(User_ID, User_Name, Password_Hash, DOB_Day, DOB_Month, '
-                   'DOB_Year, Email_Address, Phone_Number) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)', insertDataTuple)
+        commitAndCloseDB(conn, cursor)
 
-    commitAndCloseDB(conn, cursor)
-
-    print("User Created")
+        print("User Created")
+        spawnNotification('Signup Successful')
+    except ValueError as e:
+        spawnError(f'Error: {str(e)}')
+        sys.exit()
 
 
 def getUserName(User_ID):

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import hashlib
 from tkinter import messagebox
+import re
 
 
 def createLabels(window, labels):
@@ -49,6 +50,7 @@ def spawnNotification(message):
 
     messagebox.showinfo('Notification', message)
 
+
 def spawnWarning(message):
     """
     Spawn a warning message box
@@ -57,3 +59,16 @@ def spawnWarning(message):
     """
 
     messagebox.showwarning('Warning', message)
+
+
+def checkSQLInjection(data):
+    """
+    Checks for SQL Injection
+    :param data:
+    :return: Boolean
+    """
+
+    if re.match(r'[^a-zA-Z0-9\s@./]', data):
+        return True
+    else:
+        return False
