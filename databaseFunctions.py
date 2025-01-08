@@ -5,10 +5,6 @@ import sys
 
 
 def initDB():
-    """
-    Initializes the Database Connection and Cursor
-    :return: conn, cursor
-    """
 
     conn = sqlite3.connect('storeData.db')
     cursor = conn.cursor()
@@ -16,11 +12,6 @@ def initDB():
 
 
 def commitAndCloseDB(conn, cursor):
-    """
-    Commits and Closes the Connection and Cursor
-    :param conn:
-    :param cursor:
-    """
 
     conn.commit()
     cursor.close()
@@ -28,22 +19,12 @@ def commitAndCloseDB(conn, cursor):
 
 
 def closeDB(conn, cursor):
-    """
-    Closes the Connection and Cursor
-    :param conn:
-    :param cursor:
-    """
 
     cursor.close()
     conn.close()
 
 
 def validateEmail(email):
-    """
-    Validates the Email
-    :param email:
-    :return: Boolean
-    """
 
     if re.match(r'[^@]+@[^@]+\.[^@]+', email):
         return True
@@ -52,11 +33,6 @@ def validateEmail(email):
 
 
 def validatePassword(password):
-    """
-    Validates the Password
-    :param password:
-    :return: Boolean
-    """
 
     if re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', password):
         return False
@@ -65,11 +41,7 @@ def validatePassword(password):
 
 
 def validateAndTransformAge(DOB):
-    """
-    Validates if the date of birth is over 18 years old and separates the day, month, and year.
-    :param DOB: Date of birth in the format dd/mm/yyyy
-    :return: Tuple (day, month, year) if valid, otherwise None
-    """
+
     try:
         birth_date = datetime.strptime(DOB, '%d/%m/%Y')
     except ValueError:
@@ -86,12 +58,6 @@ def validateAndTransformAge(DOB):
 
 
 def userLogin(email, passwordHash):
-    """
-    Checks if the user exists in the database
-    :param email:
-    :param passwordHash:
-    :return: User_ID if found, otherwise None
-    """
 
     conn, cursor = initDB()
 
@@ -111,15 +77,7 @@ def userLogin(email, passwordHash):
 
 
 def userSignup(userName, password, DOB, email, phoneNumber):
-    """
-    Signs up the user if the data is valid
-    :param userName:
-    :param password:
-    :param DOB:
-    :param email:
-    :param phoneNumber:
-    :return: Boolean if validation failure
-    """
+
     try:
         ageData = validateAndTransformAge(DOB)
         if ageData is None:
@@ -166,11 +124,6 @@ def userSignup(userName, password, DOB, email, phoneNumber):
 
 
 def getUserName(User_ID):
-    """
-    Gets the username of the user
-    :param User_ID:
-    :return: Username
-    """
 
     conn, cursor = initDB()
 
@@ -184,11 +137,6 @@ def getUserName(User_ID):
 
 
 def getDOB(user_ID):
-    """
-    Gets the age of the user
-    :param user_ID:
-    :return: day, month, year
-    """
 
     conn, cursor = initDB()
 
@@ -205,11 +153,6 @@ def getDOB(user_ID):
 
 
 def getEmail(User_ID):
-    """
-    Gets the email of the user
-    :param User_ID:
-    :return: Email
-    """
 
     conn, cursor = initDB()
 
@@ -223,11 +166,6 @@ def getEmail(User_ID):
 
 
 def getPhoneNumber(User_ID):
-    """
-    Gets the phone number of the user
-    :param User_ID:
-    :return: Phone Number
-    """
 
     conn, cursor = initDB()
 
@@ -240,10 +178,6 @@ def getPhoneNumber(User_ID):
 
 
 def getProducts():
-    """
-    Gets the products from the database
-    :return: products
-    """
 
     conn, cursor = initDB()
     cursor.execute('SELECT * FROM "main"."ProductInformation"')
@@ -255,11 +189,7 @@ def getProducts():
 
 
 def getProductStock(productID):
-    """
-    Gets the stock of a product from the database
-    :param productID:
-    :return: stock
-    """
+
     conn, cursor = initDB()
     cursor.execute('SELECT Product_Quantity FROM "main"."ProductInformation" WHERE ProductID = ?', (productID,))
     stock = cursor.fetchone()
@@ -268,23 +198,14 @@ def getProductStock(productID):
 
 
 def updateProductStock(productID, quantity):
-    """
-    Updates the stock of a product in the database
-    :param productID:
-    :param quantity:
-    """
+
     conn, cursor = initDB()
     cursor.execute('UPDATE "main"."ProductInformation" SET Product_Quantity = Product_Quantity - ? WHERE ProductID = ?', (quantity, productID))
     commitAndCloseDB(conn, cursor)
 
 
 def placeOrder(userID, cart, total):
-    """
-    Places an order in the database
-    :param userID:
-    :param cart:
-    :param total:
-    """
+
     conn, cursor = initDB()
 
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')

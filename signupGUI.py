@@ -3,9 +3,7 @@ from databaseFunctions import userSignup
 
 
 def signupGUI():
-    """
-    This function creates the signup window for the user to signup
-    """
+
     signupWindow = tk.Tk()
     signupWindow.title('Signup')
     signupWindow.geometry('400x400')

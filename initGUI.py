@@ -4,9 +4,7 @@ from signupGUI import signupGUI
 
 
 def initGUI():
-    """
-    This function creates the initial window for the user to either login or signup
-    """
+
     initWindow = tk.Tk()
     initWindow.title('Welcome')
     initWindow.geometry('400x300')

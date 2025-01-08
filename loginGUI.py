@@ -4,9 +4,7 @@ from storefrontGUI import createStoreFront
 
 
 def loginGUI():
-    """
-    This function creates the login window for the user to login
-    """
+
     loginWindow = tk.Tk()
     loginWindow.title('Login')
     loginWindow.geometry('400x300')

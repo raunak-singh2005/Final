@@ -10,12 +10,7 @@ import sys
 
 
 def viewDescription(description, productID):
-    """
-    This function creates a new window to display the description of the product
-    :param description:
-    :param productID:
-    :return:
-    """
+
     descriptionWindow = tk.Toplevel()
     descriptionWindow.title('Description')
     descriptionWindow.geometry('400x500')
@@ -36,12 +31,7 @@ def viewDescription(description, productID):
 
 
 def createStoreFront(cart, User_ID):
-    """
-    This function creates the storefront window
-    :param cart:
-    :param User_ID:
-    :return:
-    """
+
     userName = getUserName(User_ID)
 
     storefront = tk.Tk()
@@ -142,12 +132,7 @@ def createStoreFront(cart, User_ID):
 
 
 def addToCart(cart, item):
-    """
-    This function adds an item to the cart
-    :param cart:
-    :param item:
-    :return:
-    """
+
     productID = item[0]
     currentStock = getProductStock(productID)
     cartQuantity = sum(1 for i in cart if i[0] == productID)
@@ -160,11 +145,7 @@ def addToCart(cart, item):
 
 
 def checkout(userID, cart):
-    """
-    This function displays the cart and allows the user to check out
-    :param cart:
-    :return:
-    """
+
     if not cart:
         spawnWarning("Cart is empty")
         return
@@ -173,11 +154,7 @@ def checkout(userID, cart):
 
 
 def showCart(userID, cart):
-    """
-    This function displays the cart
-    :param cart:
-    :return:
-    """
+
     cartWindow = tk.Tk()
     cartWindow.title('Cart')
     cartWindow.geometry('800x600')
