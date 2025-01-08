@@ -20,7 +20,7 @@ def viewDescription(description, productID):
     descriptionWindow.title('Description')
     descriptionWindow.geometry('400x500')
 
-    productImagePath = os.path.join('Images', f'{productID}.jpg')
+    productImagePath = os.path.join('Images', f'{productID}.jpeg')
 
     if os.path.exists(productImagePath):
         image = Image.open(productImagePath)
@@ -62,7 +62,7 @@ def createStoreFront(cart, User_ID):
     tk.Button(searchFrame, text='Search', command=lambda: searchProducts(searchVar.get()), font=('Arial', 12)).pack(side='right', padx=5)
 
     # Add category filter buttons
-    categories = ['Electronics', 'Clothing', 'Books', 'Toys', 'Food']
+    categories = ['BMX', 'Mountain', 'Electric', 'Kids', 'Sports']
     for category in categories:
         tk.Button(searchFrame, text=category, command=lambda c=category: searchProducts('', c)).pack(side='left', padx=5)
 
@@ -107,7 +107,7 @@ def createStoreFront(cart, User_ID):
             productStock = product[3]
             productDescription = product[4]
 
-            productImagePath = os.path.join('Images', str(productID) + '.jpg')
+            productImagePath = os.path.join('Images', str(productID) + '.jpeg')
 
             productContainer = tk.Frame(scrollableFrame, bg='white', padx=10, pady=10, bd=1, relief='solid')
             productContainer.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky='nsew')
@@ -261,5 +261,3 @@ def showCart(userID, cart):
     tk.Button(cartWindow, text='Checkout', command=finalCheckout, font=('Arial', 12, 'bold')).pack(pady=10)
 
     cartWindow.mainloop()
-
-createStoreFront([], 1)
