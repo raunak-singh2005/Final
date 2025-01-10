@@ -99,7 +99,7 @@ def userSignup(userName, password, DOB, email, phoneNumber):
             spawnError('Email is invalid')
             return False
 
-        elif not validatePassword(password):
+        elif validatePassword(password):
             spawnError('Password must be at least 8 characters long and contain at least one letter and one number')
             return False
 
@@ -120,6 +120,11 @@ def userSignup(userName, password, DOB, email, phoneNumber):
 
         if user_id is not None:
             print('User already exists')
+            closeDB(conn, cursor)
+            return False
+
+        elif len(phoneNumber) != 11:
+            spawnError('Phone number must be 11 digits long')
             closeDB(conn, cursor)
             return False
 
@@ -153,48 +158,48 @@ def getUserName(User_ID):
     return userName
 
 
-def getDOB(user_ID):
-
-    conn, cursor = initDB()
-
-    # sql command to fetch date of birth
-    cursor.execute('SELECT DOB_Day, DOB_Month, DOB_Year FROM "main"."UserInformation" WHERE User_ID = ?', (user_ID,))
-    day,month,year = cursor.fetchone()
-
-    day = day[0]
-    month = month[0]
-    year = year[0]
-
-    closeDB(conn, cursor)
-
-    return day, month, year
-
-
-def getEmail(User_ID):
-
-    conn, cursor = initDB()
-
-    # sql command to fetch email
-    cursor.execute('SELECT Email_Address FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
-    email = cursor.fetchone()
-
-    email = email[0]
-    closeDB(conn, cursor)
-
-    return email
+# def getDOB(user_ID):
+#
+# conn, cursor = initDB()
+#
+# # sql command to fetch date of birth
+# cursor.execute('SELECT DOB_Day, DOB_Month, DOB_Year FROM "main"."UserInformation" WHERE User_ID = ?', (user_ID,))
+# day,month,year = cursor.fetchone()
+#
+# day = day[0]
+# month = month[0]
+# year = year[0]
+#
+# closeDB(conn, cursor)
+#
+# return day, month, year
 
 
-def getPhoneNumber(User_ID):
+# def getEmail(User_ID):
+#
+#     conn, cursor = initDB()
+#
+#     # sql command to fetch email
+#     cursor.execute('SELECT Email_Address FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
+#     email = cursor.fetchone()
+#
+#     email = email[0]
+#     closeDB(conn, cursor)
+#
+#     return email
 
-    conn, cursor = initDB()
 
-    # sql command to fetch phone number
-    cursor.execute('SELECT Phone_Number FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
-    phoneNumber = cursor.fetchone()
-    phoneNumber = phoneNumber[0]
-    closeDB(conn, cursor)
-
-    return phoneNumber
+# def getPhoneNumber(User_ID):
+#
+#     conn, cursor = initDB()
+#
+#     # sql command to fetch phone number
+#     cursor.execute('SELECT Phone_Number FROM "main"."UserInformation" WHERE User_ID = ?', (User_ID,))
+#     phoneNumber = cursor.fetchone()
+#     phoneNumber = phoneNumber[0]
+#     closeDB(conn, cursor)
+#
+#     return phoneNumber
 
 
 def getProducts():
@@ -245,3 +250,16 @@ def placeOrder(userID, cart, total):
     cursor.execute('INSERT INTO "main"."Sales"(User_ID, Date, Items, Total_Price) VALUES (?, ?, ?, ?)', (userID, str(date), cart_str, total))
 
     commitAndCloseDB(conn, cursor)
+
+
+testUsername = 'testUser'
+testPassword = 'TestPass12'
+testDOB = '09/10/2005'
+testEmail = 'test@email.com'
+testPhoneNumber = '0011233445'
+
+userSignup(testUsername, testPassword, testDOB, testEmail, testPhoneNumber)
+
+
+
+
