@@ -83,7 +83,8 @@ def userLogin(email, passwordHash):
         print('User ID: ', user_ID[0])
         return user_ID[0]
     else:
-        print('user not found')
+        print('User not found')
+        spawnError('User not found')
 
 
 def userSignup(userName, password, DOB, email, phoneNumber):
@@ -250,16 +251,3 @@ def placeOrder(userID, cart, total):
     cursor.execute('INSERT INTO "main"."Sales"(User_ID, Date, Items, Total_Price) VALUES (?, ?, ?, ?)', (userID, str(date), cart_str, total))
 
     commitAndCloseDB(conn, cursor)
-
-
-testUsername = 'testUser'
-testPassword = 'TestPass12'
-testDOB = '09/10/2005'
-testEmail = 'test@email.com'
-testPhoneNumber = '0011233445'
-
-userSignup(testUsername, testPassword, testDOB, testEmail, testPhoneNumber)
-
-
-
-
